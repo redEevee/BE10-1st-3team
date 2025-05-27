@@ -2,13 +2,15 @@ package user_profile;
 
 import java.util.Scanner;
 
+import movie.MovieController;
+import movie.MovieDAO;
 import util.FormatterUtil;
 
 public class UserController {
 	Scanner key = new Scanner(System.in);
 	UserDAOImpl dao = new UserDAOImpl();
-
-	public void login() {
+	MovieController mc=new MovieController();
+	public UserDTO login() {
 		System.out.println("*******로그인페이지********");
 		System.out.print("아이디:");
 		String id = key.next();
@@ -20,9 +22,10 @@ public class UserController {
 		} else {
 			System.out.println("아이디가 존재하지 않습니다. \n다시 시도해주세요.");
 		}
+		return user;
 	}
 
-	public void userInsert() {
+	public boolean userInsert() {
 		System.out.println("*******회원가입페이지********");
 		System.out.print("아이디:");
 		String id = key.next();
@@ -42,5 +45,28 @@ public class UserController {
 		} else {
 			System.out.println("회원가입 실패");
 		}
+		return false;
 	}
+
+	public boolean confirmPassword(String id, String passwordConfirm) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean deleteUserProfile(String string) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void myPage(UserDTO loggedInUser) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean deleteUserProfile(UserDTO loggedInUser) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	
 }
