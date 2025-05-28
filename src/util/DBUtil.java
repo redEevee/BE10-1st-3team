@@ -26,7 +26,6 @@ public class DBUtil {
 	// 드라이버 로딩
 	// => 클래스가 로딩될 때 한 번 실행된다.
 	static {
-		System.out.println("static블럭");
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {

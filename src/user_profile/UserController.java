@@ -1,32 +1,35 @@
 package user_profile;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import movie.MovieController;
-import movie.MovieDAO;
 import util.FormatterUtil;
 
 public class UserController {
 	Scanner key = new Scanner(System.in);
 	UserDAOImpl dao = new UserDAOImpl();
-	MovieController mc=new MovieController();
+	MovieController mc = new MovieController();
+
 	public UserDTO login() {
-		System.out.println("*******로그인페이지********");
+		System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+		System.out.println("              로그인 페이지              ");
+		System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
 		System.out.print("아이디:");
 		String id = key.next();
 		System.out.print("비밀번호:");
 		String password = key.next();
 		UserDTO user = dao.login(id, password);
-		if (user != null) {
-			System.out.println("로그인 성공");
-		} else {
-			System.out.println("아이디가 존재하지 않습니다. \n다시 시도해주세요.");
+		if (user == null) {
+			System.out.println("로그인 실패. \n다시 시도해주세요.");
 		}
 		return user;
 	}
 
-	public boolean userInsert() {
-		System.out.println("*******회원가입페이지********");
+	public boolean signupUser() {
+		System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+		System.out.println("              회원가입 페이지              ");
+		System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
 		System.out.print("아이디:");
 		String id = key.next();
 		System.out.print("비밀번호:");
@@ -39,34 +42,55 @@ public class UserController {
 		System.out.print("생년월일:");
 		String birth_date = key.next();
 		birth_date = FormatterUtil.yearFormatter(birth_date);
-		int result = dao.userInsert(id, name, pass, phone, birth_date);
-		if (result != 0) {
-			System.out.println("회원가입 성공");
-		} else {
-			System.out.println("회원가입 실패");
+		boolean result = false;
+		if (dao.signupUser(id, name, pass, phone, birth_date) != 0) {
+			result = true;
+		}
+		return result;
+	}
+
+	public boolean confirmPassword(String id, String passwordConfirm) {
+		if (dao.login(id, passwordConfirm) != null) {
+			return true;
 		}
 		return false;
 	}
 
-	public boolean confirmPassword(String id, String passwordConfirm) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deleteUserProfile(String id) {
+		boolean result = false;
+		if (dao.deleteUser(id) != 0) {
+			result = true;
+		}
+		return result;
 	}
 
-	public boolean deleteUserProfile(String string) {
-		// TODO Auto-generated method stub
-		return false;
+	public UserDTO updateUserProfile(UserDTO loggedInUser) throws SQLException {
+		Scanner key = new Scanner(System.in);
+
+		while (true) {
+			System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+			System.out.println("              회원 정보 수정");
+			System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+			System.out.println("1. 아이디: " + loggedInUser.getId() + " (수정 불가)");
+			System.out.println("2. 이름: " + loggedInUser.getName());
+			System.out.println("3. 전화번호: " + loggedInUser.getPhone());
+			System.out.println("4. 생년월일: " + loggedInUser.getBirth_date());
+			System.out.println("0. 수정 완료");
+			System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+			System.out.print("수정할 메뉴를 선택해주세요: ");
+
+			String choice = key.nextLine().trim();
+
+			if (choice.equals("0")) {
+				System.out.println("회원 정보 수정이 완료되었습니다.");
+			}
+			UserDTO result = null;
+			if (dao.updateUser(choice, loggedInUser.getId()) != 0) {
+
+				result = dao.getUserById(loggedInUser.getId());
+			}
+			return result;
+		}
 	}
 
-	public void myPage(UserDTO loggedInUser) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public boolean deleteUserProfile(UserDTO loggedInUser) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	
 }
